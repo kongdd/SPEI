@@ -12,22 +12,17 @@ Functions `<spei>` and `<spi>` are the workhorse of the SPEI library. Other func
 
 
 ## Installation
-
 Install the latest stable development version from GitHub:
-
 ```r
-library(devtools)
-install_github('sbegueria', 'SPEI')
+devtools::install_github('kongdd/SPEI')
 ```
 
 Or get it from the [CRAN](https://cran.r-project.org) repository:
-
 ```r
 install.packages('SPEI')
 ```
 
 Please, note that the CRAN version may not be the very latest version of the package.
-
 
 ## References
 

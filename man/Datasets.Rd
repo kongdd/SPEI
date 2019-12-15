@@ -6,8 +6,6 @@
 \alias{wichita}
 \alias{balance}
 \alias{cabinda}
-\alias{cabinda}
-\alias{balance}
 \title{Datasets for illustrating the functions in the SPEI package.}
 \format{\code{wichita} dataset:
 \describe{

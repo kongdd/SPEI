@@ -1,27 +1,21 @@
 spei <- function(x, y,...) UseMethod('spei')
 
-
 #' @name Drought-indices
-#' 
 #' @aliases spi
 #' 
 #' @title Calculation of the Standardized Precipitation-Evapotranspiration 
 #' Index (SPEI) and the Standardized Precipitation Index (SPI).
 #' 
-#' 
 #' @description
 #' Given a time series of the climatic water balance (precipitation minus 
 #' potential evapotranspiration), gives a time series of the Standardized 
 #' Precipitation-Evapotranspiration Index (SPEI).
-#' 
-#' 
+#'  
 #' @usage 
 #' spei(data, scale, kernel = list(type = 'rectangular', shift = 0),
 #' distribution = 'log-Logistic', fit = 'ub-pwm', na.rm = FALSE,
 #' ref.start=NULL, ref.end=NULL, x=FALSE, params=NULL, ...)
 #'
-#' 
-#' 
 #' @param data a vector, matrix or data frame with time ordered values 
 #' of precipitation (for the SPI) or of the climatic balance 
 #' precipitation minus potential evapotranspiration (for the SPEI).
@@ -80,7 +74,6 @@ spei <- function(x, y,...) UseMethod('spei')
 #' each observation within the year (month), allowing the data to start in a month 
 #' other than January.
 #' 
-#' 
 #' @section Time scales:
 #' An important advantage of the SPEI and the SPI is that they can be computed at 
 #' different time scales. This way it is possible to incorporate the influence of 
@@ -94,12 +87,10 @@ spei <- function(x, y,...) UseMethod('spei')
 #' The parameter \code{kernel} is a list defining the shape of the kernel and a time shift. 
 #' These parameters are then passed to the function \code{\link{kern}}.
 #' 
-#' 
 #' @section Probability distributions:
 #' Following the original definitions \code{spei} uses a log-Logistic distribution 
 #' by default, and \code{spi} uses a Gamma distribution. This behaviour can be modified, 
 #' however, through parameter \code{distribution}.
-#' 
 #' 
 #' @section Fitting methods:
 #' The default method for parameter fitting is based on unbiased Probability Weighted 
@@ -138,7 +129,6 @@ spei <- function(x, y,...) UseMethod('spei')
 #' result would be a matrix (data frame) of spi or spei series. This makes processing large datasets 
 #' extremely easy, since no loops need to be used.
 #' 
-#' 
 #' @return 
 #' Functions \code{spei} and \code{spi} return an object of class \code{spei}. The generic 
 #' functions \code{print} and \code{summary} can be used to obtain summaries of the results. 
@@ -168,7 +158,6 @@ spei <- function(x, y,...) UseMethod('spei')
 #'   \item data: if requested, the input data used.
 #' }
 #' 
-#' 
 #' @references 
 #' S.M. Vicente-Serrano, S. Beguería, J.I. López-Moreno. 2010. A Multi-scalar drought index sensitive 
 #' to global warming: The Standardized Precipitation Evapotranspiration Index – SPEI. 
@@ -181,16 +170,13 @@ spei <- function(x, y,...) UseMethod('spei')
 #' 
 #' \url{http://spei.csic.es}
 #' 
-#' 
 #' @author Santiago Beguería and Sergio M. Vicente-Serrano. Maintainer: Santiago Beguería.
-#' 
 #' 
 #' @seealso 
 #' \code{\link{kern}} for different kernel functions available. \code{\link{thornthwaite}}, 
 #' \code{\link{hargreaves}} and \code{\link{penman}} for ways of calculating potential evapotranspiration. 
 #' \code{\link{summary.spei}} and \code{\link{print.spei}} for summaries of \code{spei} objects. 
 #' \code{\link{plot.spei}} for plotting \code{spei} objects.
-#' 
 #' 
 #' @examples 
 #' # Load data
@@ -262,7 +248,6 @@ spei <- function(x, y,...) UseMethod('spei')
 #' @importFrom TLMoments PWM
 #' 
 #' @export
-#' 
 spei <- function(data, scale, kernel=list(type='rectangular',shift=0),
                  distribution='log-Logistic', fit='ub-pwm', na.rm=FALSE, 
                  ref.start=NULL, ref.end=NULL, x=FALSE, params=NULL, ...) {
@@ -294,7 +279,6 @@ spei <- function(data, scale, kernel=list(type='rectangular',shift=0),
   m <- ncol(data)
   fr <- frequency(data)
   
-  
   coef = switch(distribution,
                 "Gamma" = array(NA,c(2,m,fr),list(par=c('alpha','beta'),colnames(data),NULL)),
                 "log-Logistic" = array(NA,c(3,m,fr),list(par=c('xi','alpha','kappa'),colnames(data),NULL)),
@@ -321,11 +305,11 @@ spei <- function(data, scale, kernel=list(type='rectangular',shift=0),
     acu <- data.fit[,s]
     acu.pred <- data[,s]
     if (scale>1) {
-      wgt <- kern(scale,kernel$type,kernel$shift)
-      acu[scale:length(acu)] <- rowSums(embed(acu,scale)*wgt,na.rm=na.rm)
-      acu[1:(scale-1)] <- NA
-      acu.pred[scale:length(acu.pred)] <- rowSums(embed(acu.pred,scale)*wgt,na.rm=na.rm)
-      acu.pred[1:(scale-1)] <- NA
+      wgt <- kern(scale, kernel$type, kernel$shift)
+      value_accu <- rowMeans(embed(acu, scale)*wgt, na.rm=na.rm)*scale
+      acu[scale:length(acu)] <- value_accu
+      acu[1:(scale-1)] = NA
+      acu.pred <- acu
     }
     
     # Loop through the months
@@ -416,154 +400,18 @@ spei <- function(data, scale, kernel=list(type='rectangular',shift=0),
   } # next s (series)
   colnames(std) <- colnames(data)
   
-  z <- list(call=match.call(expand.dots=FALSE),
-            fitted=std,coefficients=coef,scale=scale,kernel=list(type=kernel$type,
-                                                                 shift=kernel$shift,values=kern(scale,kernel$type,kernel$shift)),
-            distribution=distribution,fit=fit,na.action=na.rm)
+  z <- list(call = match.call(expand.dots=FALSE),
+            fitted = std, 
+            coefficients=coef,
+            scale=scale,
+            kernel=list(type=kernel$type, 
+            shift=kernel$shift,
+            values=kern(scale,kernel$type,kernel$shift)),
+            distribution=distribution, 
+            fit=fit,na.action=na.rm)
   if (x) z$data <- data
   if (!is.null(ref.start)) z$ref.period <- rbind(ref.start,ref.end)
   
   class(z) <- 'spei'
   return(z)
-}
-
-#' @name Generic-methods-for-spei-objects
-#' 
-#' @title Generic methods for \code{spei} objects.
-#' 
-#' @aliases print.spi plot.spei plot.spi summary.spei summary.spi
-#' 
-#' @description 
-#' Generic methods for extracting information and plotting \code{spei} objects.
-#' 
-#' @usage
-#' \method{print}{spei}(x, ...)
-#' \method{summary}{spei}(object, ...)
-#' \method{plot}{spei}(x, ttext, ...)
-#' 
-#' @param x an object of class \code{spei}.
-#' @param object an object of class \code{spei}.
-#' @param ttext text to use as part of the plot title
-#' @param ... additional parameters, not used at present.
-#' 
-#' 
-#' @details This functions allow extracting information and plotting \code{spei} 
-#' objects. \code{print} yields the fitted values, i.e. a time series of SPEI or SPI values. 
-#' \code{summary} reports the function call, the parameters of the PDF used, and the time 
-#' series of SPEI or SPI values. \code{plot} produces a plot of the time series of SPEI or 
-#' SPI values, with blue and red colors for positive and negative values, respectively. If 
-#' a reference period was used in the function call it is shown by a shaded area. In the 
-#' unlikely case that NA or Inf values were produced, these are shown by circles.
-#' 
-#' @references 
-#' S.M. Vicente-Serrano, S. Beguería, J.I. López-Moreno. 2010. A Multi-scalar drought index 
-#' sensitive to global warming: The Standardized Precipitation Evapotranspiration Index – SPEI. 
-#' \emph{Journal of Climate} \bold{23}: 1696, DOI: 10.1175/2009JCLI2909.1.
-#' 
-#' 
-#' @author Santiago Beguería
-#'  
-#' 
-#' @export
-#' 
-print.spei <- function (x, ...) {
-	print(x$fitted)
-}
-
-#' 
-#' @title summary of spei/spi
-#' 
-#' 
-#' @description See print.spei
-#' 
-#' 
-#' @details See print.spei
-#' 
-#' 
-#' @rdname Generic-methods-for-spei-objects
-#' 
-#' 
-#' @export
-#' 
-summary.spei <- function (object, ...) {
-	x <- object
-	cat('Call:\n')
-	print(x$call)
-	cat('\nCoefficients:\n')
-	for (i in 1:dim(x$coeff)[2]) {
-		cat('\t',dimnames(x$coeff)[[2]][i],':\n',sep='')
-		tab <- cbind(t(x$coeff[,i,]))
-		rownames(tab) <- 1:dim(x$coeff)[3]
-		print(tab)
-		cat('\nFitted:\n')
-		print(x$fitted)
-	}
-}
-
-#' 
-#' @title plot spei/spi
-#' 
-#' 
-#' @description See print.spei
-#' 
-#' 
-#' @details See print.spei
-#' 
-#' 
-#' @rdname Generic-methods-for-spei-objects
-#' 
-#' 
-#' @importFrom stats ts frequency end 
-#' @importFrom graphics plot polygon abline grid lines points par
-#' 
-#' 
-#' @export
-#' 
-plot.spei <- function (x, ttext=NULL, ...) {
-  label <- ifelse(as.character(x$call)[1]=='spei','SPEI','SPI')
-	ser <- ts(as.matrix(x$fitted[-c(1:x$scale),]),
-		end=end(x$fitted),frequency=frequency(x$fitted))
-	ser[is.nan(ser-ser)] <- 0
-	se <- ifelse(ser==0,ser,NA)
-	if(is.null(ttext)){
-	  tit <- paste(label, dimnames(x$coefficients)[2][[1]])
-	} else {
-	  tit = paste(label, ttext, seq_along(dim(x$coefficients)[2]))
-	}
-	#
-	if (start(ser)[2]==1) {
-		ns <- c(start(ser)[1]-1,12)
-	} else {
-		ns <- c(start(ser)[1],start(ser)[2]-1)	
-	}
-	if (end(ser)[2]==12) {
-		ne <- c(end(ser)[1]+1,1)
-	} else {
-		ne <- c(end(ser)[1],end(ser)[2]+1)
-	}
-	#
-	n <- ncol(ser)
-	if (is.null(n)) n <- 1
-	par(mar=c(4,4,2,1)+0.1)
-	if (n>1 & n<5) par(mfrow=c(n,1))
-	if (n>1 & n>=5) par(mfrow=c({n+1}%/%2,2))
-	for (i in 1:n) {
-		datt <- ts(c(0,ser[,i],0),frequency=frequency(ser),start=ns,end=ne)
-		datt.pos <- ifelse(datt>0,datt,0)
-		datt.neg <- ifelse(datt<=0,datt,0)
-		plot(datt, type='n', xlab='', ylab=paste(label, "(z-values)"),main=tit[i])
-		if (!is.null(x$ref.period)) {
-			k <- ts(5,start=x$ref.period[1,],end=x$ref.period[2,],frequency=12)
-			k[1] <- k[length(k)] <- -5
-			polygon(k, col='light grey',border=NA,density=20)
- 			abline(v=x$ref.period[1,1]+(x$ref.period[1,2]-1)/12,col='grey')
-			abline(v=x$ref.period[2,1]+(x$ref.period[2,2]-1)/12,col='grey')
-		}
-		grid(col='black')
-		polygon(datt.pos,col='blue',border=NA)
-		polygon(datt.neg,col='red',border=NA)
-		lines(datt,col='dark grey')
-		abline(h=0)
-		points(se,pch=21,col='white',bg='black')
-	}
 }

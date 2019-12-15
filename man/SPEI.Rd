@@ -3,7 +3,6 @@
 \docType{package}
 \name{SPEI}
 \alias{SPEI}
-\alias{SPEI-package}
 \title{SPEI.}
 \description{
 A set of functions for computing potential evapotranspiration and several widely 
@@ -14,8 +13,8 @@ Index (SPEI).
 \tabular{ll}{
   Package: \tab SPEI\cr
   Type: \tab Package\cr
-  Version: \tab 1.4\cr
-  Date: \tab 2011-26-09\cr
+  Version: \tab 1.7.2\cr
+  Date: \tab 2018-01-04\cr
   License: \tab GPL version 2 or newer\cr
   LazyLoad: \tab yes\cr
 }
@@ -32,7 +31,7 @@ S.M. Vicente-Serrano, S. Beguería, J.I. López-Moreno. 2010. A Multi-scalar dro
 index sensitive to global warming: The Standardized Precipitation Evapotranspiration 
 Index – SPEI. \emph{Journal of Climate} \bold{23}: 1696, DOI: 10.1175/2009JCLI2909.1.
 
-\url{http://spei.csic.es}
+\url{http://sac.csic.es/spei/}
 }
 \author{
 Santiago Beguería and Sergio M. Vicente-Serrano

@@ -5,8 +5,6 @@
 \alias{hargreaves}
 \alias{thornthwaite}
 \alias{penman}
-\alias{penman}
-\alias{thornthwaite}
 \title{Computation of potential evapotranspiration.}
 \usage{
 thornthwaite(Tave, lat, na.rm = FALSE)
@@ -17,9 +15,24 @@ penman(Tmin, Tmax, U2, Ra = NA, lat = NA, Rs = NA, tsun = NA,
        CC = NA, ed = NA, Tdew = NA, RH = NA, P = NA, P0 = NA,
               z = NA, crop='short', na.rm = FALSE)
 
-penman(Tmin, Tmax, U2, Ra = NA, lat = NA, Rs = NA, tsun = NA, CC = NA,
-  ed = NA, Tdew = NA, RH = NA, P = NA, P0 = NA, z = NA,
-  crop = "short", na.rm = FALSE)
+penman(
+  Tmin,
+  Tmax,
+  U2,
+  Ra = NA,
+  lat = NA,
+  Rs = NA,
+  tsun = NA,
+  CC = NA,
+  ed = NA,
+  Tdew = NA,
+  RH = NA,
+  P = NA,
+  P0 = NA,
+  z = NA,
+  crop = "short",
+  na.rm = FALSE
+)
 
 thornthwaite(Tave, lat, na.rm = FALSE)
 }

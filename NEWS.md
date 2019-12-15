@@ -6,6 +6,11 @@
 
 __Version history:
 
+_Version 1.7.2, June 2017 (current on github).
+
+1. Fix NA value error in SPI and SPEI
+2. Add groundwater drought index (SGI)
+
 _Version 1.7.1, June 2017 (current on github).
 
 1. Corrected an error in `<spei>` function, which was not working when distribution was Gamma or PeasonIII and using user provided parameters. (Fixed by Emanuele Cordano, emanuele.cordano@gmail.com -- ecor)
